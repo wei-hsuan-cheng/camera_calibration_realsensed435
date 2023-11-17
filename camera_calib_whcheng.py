@@ -81,14 +81,12 @@ detected corners (imgpoints)
 """
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-print("Camera matrix : \n")
-print(mtx)
-print("dist : \n")
-print(dist)
-print("rvecs : \n")
-print(rvecs)
-print("tvecs : \n")
-print(tvecs)
+print(f"Frame size: \n{gray.shape[::-1]}\n")
+print(f"Camera matrix: \n{mtx}\n")
+print(f"dist: \n{dist}\n")
+print(f"rvecs: \n{rvecs}\n")
+print(f"tvecs: \n{tvecs}\n")
+
 
 """
 Undistort the images using cv.undistort();
