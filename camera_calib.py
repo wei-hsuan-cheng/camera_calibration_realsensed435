@@ -35,7 +35,7 @@ def CameraCalib(imgs):
     ret, camera_mat, camera_distort, rvecs, tvecs = cv.calibrateCamera(
         objpoints, imgpoints, gray.shape[::-1], None, None)
 
-    return camera_mat, camera_distort
+    return camera_mat, camera_distort, rvecs, tvecs
 
 def UndistortImages(imgs, camera_mat, camera_distort):
     undistorted_imgs = list()
@@ -58,19 +58,29 @@ def UndistortImages(imgs, camera_mat, camera_distort):
 
 def main():
     path = f"{DIR}/Camera_Calib/frames/frame-*.png"
-    path2 = f"{DIR}/Camera_Calib/frames_extra/frame-*.png"
+    # path2 = f"{DIR}/Camera_Calib/frames_extra/frame-*.png"
 
     filenames = glob.glob(path)
 
     imgs = [cv.imread(filename) for filename in filenames]
 
-    camera_mat, camera_distort = CameraCalib(imgs)
+    camera_mat, camera_distort, rvecs, tvecs = CameraCalib(imgs)
 
     print(f"camera_mat =\n{camera_mat}")
     print(f"camera_distort =\n{camera_distort}")
 
     np.save(f"{DIR}/camera_params.npy", {"camera_mat": camera_mat,
-                                         "camera_distort": camera_distort})
+                                         "camera_distort": camera_distort,
+                                         "camera_rvecs": rvecs,
+                                         "camera_tvecs": tvecs,})
+    
+    np.savez(
+    f"{DIR}/camera_mat_distort",
+    camera_mat = camera_mat,
+    camera_distort = camera_distort,
+    camera_rvecs = rvecs,
+    camera_tvecs = tvecs,
+)
 
     undistorted_imgs = UndistortImages(imgs, camera_mat, camera_distort)
 
